@@ -21,6 +21,16 @@ class Scoreboard:
         self.number_of_stats = 5
         self.base_height_offset = 20
         self.font_size = 16
+
+        self.winner_label = pyglet.text.Label('Winner: None',
+                                              x=0,
+                                              y=0,
+                                              font_name='Arial',
+                                              font_size=self.font_size, batch=batch, group=group, color=(255, 255, 255, 255))
+        
+        self.distance_to_exit_label = pyglet.text.Label('Direct Distance To Exit : 0', x=0, y=0,
+                                                        font_name='Arial', font_size=self.font_size, batch=batch, group=group)
+
         self.distance_to_exit_label = pyglet.text.Label('Direct Distance To Exit : 0', x=0, y=0,
                                                         font_name='Arial', font_size=self.font_size, batch=batch, group=group)
         self.distance_to_exit = 0
@@ -112,16 +122,30 @@ class Scoreboard:
                     display_element.text = "Excess Distance Traveled: " + str(max(0, int(player_object.distance_traveled-self.distance_to_exit)))
     
     def update_nodes_count(self):
-    # Update the number of nodes hit by each player (including duplicates)
         for display_element, player_configuration_info in self.player_nodes_hit_display:
             for player_object in global_game_data.player_objects:
                 if player_object.player_config_data == player_configuration_info:
                     display_element.text = "Number of Nodes Visited: " + str(len(player_object.nodes_visited))
+    
+    def determine_winner(self):
+        
+        shortestDist = 10000000000000000000000
+        winner = None
+
+        for player in global_game_data.player_objects:
+            if player.player_config_data[0] != "Test":
+               if player.distance_traveled < shortestDist:
+                shortestDist = player.distance_traveled
+                winner = player.player_config_data[0]
+
+            self.winner_label.text = f"Winner: {winner} with {int(shortestDist)} steps"
 
     def update_scoreboard(self):
         self.update_elements_locations()
         self.update_paths()
         self.update_distance_to_exit()
         self.update_distance_traveled()
-        self.update_nodes_count()  # Update the "Number of Nodes hits"
+        self.update_nodes_count()  
+        self.determine_winner()  
+
 

@@ -52,13 +52,103 @@ def get_random_path():
 
     return path
 
+def dfs(graph, start, target):
+    stck= [(start, [start])] 
+    visitedNodes = set() 
+    visitedNodes.add(start)
+
+    while stck:
+        currentNode, path = stck.pop()
+
+        # If the current node is the target, return the path
+        if currentNode == target:
+            return path
+
+        # all nodes
+        for adjacentNodes in graph[currentNode][1]:
+            if adjacentNodes not in visitedNodes:
+                visitedNodes.add(adjacentNodes)
+                stck.append((adjacentNodes, path + [adjacentNodes]))
+
+    return []
+
+def bfs(graph, start, target):
+    que = [(start, [start])]  
+    vistitedNodes = set()  
+    vistitedNodes.add(start)
+
+    while que:
+        popedNode = que.pop(0)  
+        currentNode = popedNode[0]
+        path = popedNode[1]
+
+        if currentNode == target:
+            return path
+
+        for adjacentNodes in graph[currentNode][1]:
+            if adjacentNodes not in vistitedNodes:
+                vistitedNodes.add(adjacentNodes)
+                que.append((adjacentNodes, path + [adjacentNodes]))
+
+    return [] 
+
+
+
 
 def get_dfs_path():
-    return [1,2]
+    currentGraphIndex = global_game_data.current_graph_index
+    startNodeIndex = 0  
+    targetNodeIndex = global_game_data.target_node[currentGraphIndex]
+    endNodeIndex = len(graph_data.graph_data[currentGraphIndex]) - 1  
 
+    # Precoditions
+    assert 0 <= startNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "Start node doesn't exist in the current graph."
+    assert 0 <= targetNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "Target node doesn't exist in the current graph."
+    assert 0 <= endNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "End node doesn't exist in the current graph."
+
+    # Use the standalone dfs function to get paths
+    graph = graph_data.graph_data[currentGraphIndex]
+    target_path = dfs(graph, startNodeIndex, targetNodeIndex)
+    end_path = dfs(graph, targetNodeIndex, endNodeIndex)
+    end_path = end_path[1:]
+
+    # Create final path to return
+    final_path = target_path + end_path
+
+    # Postconditons
+    assert final_path[-1] == endNodeIndex, "The DFS path does not end at the end node."
+    assert targetNodeIndex in final_path, "The DFS path does not hit the target node."
+
+    return final_path
 
 def get_bfs_path():
-    return [1,2]
+    currentGraphIndex = global_game_data.current_graph_index
+    targetNodeIndex = global_game_data.target_node[currentGraphIndex]
+    startNodeIndex = 0  
+    endNodeIndex = len(graph_data.graph_data[currentGraphIndex]) - 1  
+
+    # Ensure the indices are valid within the graph
+    assert startNodeIndex == 0, "The start Node isn't the first node"
+    assert 0 <= targetNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "The target node isn't in the current list of possible nodes."
+    assert endNodeIndex == len(graph_data.graph_data[currentGraphIndex]) - 1 , "The end Node isn't the last node in the list"
+
+    
+    currentGraph = graph_data.graph_data[currentGraphIndex]
+
+    #BFS from start to target
+    target_path = bfs(currentGraph, startNodeIndex, targetNodeIndex)
+    #BFS from target to end
+    end_path = bfs(currentGraph, targetNodeIndex, endNodeIndex)
+    end_path = end_path[1:]
+
+    # Combine the two paths for full path
+    final_path = target_path + end_path
+
+    # Validate the resulting path
+    assert final_path[-1] == endNodeIndex, "The BFS path does not end at the end node."
+    assert targetNodeIndex in final_path, "The BFS path does not hit the target node."
+
+    return final_path
 
 
 def get_dijkstra_path():

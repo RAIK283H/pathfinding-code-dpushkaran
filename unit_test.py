@@ -39,6 +39,53 @@ class TestPathFinding(unittest.TestCase):
         # Check that the first node is the start node and the last node is the end node
         self.assertEqual(path[0], start_node_index, "The path should start at the start node.")
         self.assertEqual(path[-1], end_node_index, "The path should end at the end node.")
+    
+    #Checks dfs
+    def test_dfs_path(self):
+        global_game_data.current_graph_index = 0
+        global_game_data.target_node = [1]  # Set the target node to node 1 for testing
+        
+        startIndex = 0
+        targetIndex = global_game_data.target_node[global_game_data.current_graph_index]
+        endIndex = len(graph_data.graph_data[global_game_data.current_graph_index]) - 1
+        
+        path = pathing.get_dfs_path()
+
+       #Preconditions
+        self.assertEqual(path[0], startIndex, "DFS: Doesn't start at start node")
+        self.assertEqual(path[-1], endIndex, "DFS: Doesn't end at end node")
+
+        # Postcondition
+        self.assertIn(targetIndex, path, "DFS: The path doesn't contain the target.")
+        
+        # Valid path
+        graph = graph_data.graph_data[global_game_data.current_graph_index]
+        for i in range(len(path) - 1):
+            self.assertIn(path[i+1], graph[path[i]][1], "DFS: Two nodes are not connected")
+
+    # Test BFS path
+    def test_bfs_path(self):
+        global_game_data.current_graph_index = 0
+        global_game_data.target_node = [1]  
+
+        startIndex = 0
+        targetIndex = global_game_data.target_node[global_game_data.current_graph_index]
+        endIndex = len(graph_data.graph_data[global_game_data.current_graph_index]) - 1
+        
+        path = pathing.get_bfs_path()
+
+        # Preconditions
+        self.assertEqual(path[0], startIndex, "BFS:Doesn't start at start node")
+        self.assertEqual(path[-1], endIndex, "BFS: Doesn't end at end node.")
+
+        # Postcondition
+        self.assertIn(targetIndex, path, "BFS: The path doesn't contain the target.")
+        
+        # Valid Graph
+        graph = graph_data.graph_data[global_game_data.current_graph_index]
+        for i in range(len(path) - 1):
+            self.assertIn(path[i+1], graph[path[i]][1], "Two nodes are not conencted")
+
 
 if __name__ == '__main__':
     unittest.main()
