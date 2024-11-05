@@ -69,5 +69,14 @@ graph_data = [
         [(200, 200), [6, 8]],    # Node 7 connected to Nodes 6 and 8
         [(300, 200), [7]],       # Node 8 connected to Node 7 (end node)
     ],
+
+    [
+        [(0, 0), [1, 2]],        # Node 0 (start node) connected to Nodes 1 and 2
+        [(100, 0), [0, 2, 3, 4]],   # Node 1 connected to Nodes 0, 2, 3, and 4
+        [(0, 100), [0, 1, 3, 4]],   # Node 2 connected to Nodes 0, 1, 3, and 4
+        [(100, 100), [1, 2, 4, 5]], # Node 3 connected to Nodes 1, 2, 4, and 5
+        [(50, 150), [1, 2, 3, 5]],  # Node 4 connected to Nodes 1, 2, 3, and 5
+        [(150, 150), [3, 4]]        # Node 5 (end node) connected to Nodes 3 and 4
+    ],
     
 ]

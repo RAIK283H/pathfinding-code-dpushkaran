@@ -1,6 +1,8 @@
+import math
+
 def sjt_Permutations(length):
 
-    # list of nodes
+    # list of nodes indexes
     permutations = list(range(1,length))
     #list of directions for each node
     directions = [-1] * (length-1)
@@ -53,7 +55,7 @@ def find_hamilton_cycle(graph):
     end = length -1
     cycles = []
 
-    for permutation in sjt_Permutations(length -2):
+    for permutation in sjt_Permutations(length - 2):
         temp = []
         for perm in permutation:
             temp.append(perm + 1)
@@ -65,4 +67,27 @@ def find_hamilton_cycle(graph):
     if(len(cycles) > 0):
         return cycles
     return -1
-    
+
+#Calculate the total distance for a given Hamiltonian cycle
+def calculate_cycle_distance(graph, cycle):
+    total_distance = 0
+    for i in range(len(cycle) - 1):
+        x1, y1 = graph[cycle[i]][0]
+        x2, y2 = graph[cycle[i + 1]][0]
+
+        total_distance += math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+    return total_distance
+
+def optimal_hamilton_cycle(graph, cycles):
+    min_distance = float('inf')
+    optimal_cycles = []
+
+    for cycle in cycles:
+        distance = calculate_cycle_distance(graph, cycle)
+        if distance < min_distance:
+            min_distance = distance
+            optimal_cycles = [cycle]
+        elif distance == min_distance:
+            optimal_cycles.append(cycle)
+
+    return optimal_cycles, min_distance
