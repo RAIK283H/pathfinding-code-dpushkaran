@@ -85,7 +85,30 @@ class TestPathFinding(unittest.TestCase):
         graph = graph_data.graph_data[global_game_data.current_graph_index]
         for i in range(len(path) - 1):
             self.assertIn(path[i+1], graph[path[i]][1], "Two nodes are not conencted")
+    
 
+    def test_dijkstra_path_start_and_end(self):
+        global_game_data.current_graph_index = 0
+        global_game_data.target_node = [1]  # Example target node
 
+        path = pathing.get_dijkstra_path()
+
+        startNodeIndex = 0
+        endNodeIndex = len(graph_data.graph_data[global_game_data.current_graph_index]) - 1
+
+        
+        self.assertEqual(path[0], startNodeIndex, "Dijkstra: Path does not start at the correct node.")
+        self.assertEqual(path[-1], endNodeIndex, "Dijkstra: Path does not end at the correct node.")
+
+    def test_dijkstra_path_contains_target(self):
+        global_game_data.current_graph_index = 0
+        global_game_data.target_node = [2]
+
+        path = pathing.get_dijkstra_path()
+        targetNode = global_game_data.target_node[global_game_data.current_graph_index]
+
+        self.assertIn(targetNode, path, "Dijkstra: Path does not include the target node.")
+
+    
 if __name__ == '__main__':
     unittest.main()

@@ -162,6 +162,13 @@ def get_dijkstra_path():
     endNodeIndex = len(graph_data.graph_data[currentGraphIndex]) - 1  
     runningDistance = 0
 
+    assert 0 <= currentGraphIndex < len(graph_data.graph_data), "Invalid graph index."
+    assert 0 <= startNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "Start is out of bounds."
+    assert 0 <= targetNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "Target is out of bounds."
+    assert 0 <= endNodeIndex < len(graph_data.graph_data[currentGraphIndex]), "End is out of bounds."
+    assert graph_data.graph_data[currentGraphIndex], "Current graph is empty."
+
+
     target_path = None
     end_path = None
 
