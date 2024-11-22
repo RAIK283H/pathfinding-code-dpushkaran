@@ -1,3 +1,5 @@
+import heapq
+import math
 import graph_data
 import global_game_data
 from numpy import random
@@ -150,6 +152,67 @@ def get_bfs_path():
 
     return final_path
 
+def getDistance(node1, node2):
+    return math.sqrt((node1[0] - node2[0])**2 + (node1[1] - node2[1])**2)
 
 def get_dijkstra_path():
-    return [1,2]
+    currentGraphIndex = global_game_data.current_graph_index
+    startNodeIndex = 0  
+    targetNodeIndex = global_game_data.target_node[currentGraphIndex]
+    endNodeIndex = len(graph_data.graph_data[currentGraphIndex]) - 1  
+    runningDistance = 0
+
+    target_path = None
+    end_path = None
+
+    graph = graph_data.graph_data[currentGraphIndex]
+
+    priorityQ = []
+    nodeAdded =  (0, startNodeIndex, [startNodeIndex])
+    heapq.heappush(priorityQ,nodeAdded)
+    
+    nodeDistances = {}
+    for i in range(len(graph)):
+        nodeDistances[i] = float('inf')
+    nodeDistances[startNodeIndex] = 0
+    
+    # list of paths
+    nodePaths = {}
+    nodePaths[startNodeIndex] = [startNodeIndex]
+
+
+    while priorityQ:
+        curDist, curNode, curPath = heapq.heappop(priorityQ)
+        
+        # return the node when path has hit necessary node
+        if curNode == targetNodeIndex:
+            target_path = curPath
+
+        if curNode == endNodeIndex:
+            end_path = curPath
+            break
+        
+        # Visit neighbors
+        adjList = graph[curNode][1]
+        for node in adjList:  # Adjacency list
+            nextNodePos = graph[node][0]
+            curNodePos = graph[curNode][0]
+
+            distanceToNeighbor = getDistance(curNodePos, nextNodePos)
+            runningDistance = curDist + distanceToNeighbor
+            
+            if runningDistance < nodeDistances[node]:
+                nodeDistances[node] = runningDistance
+                heapq.heappush(priorityQ, (runningDistance, node, curPath + [node]))
+                nodePaths[node] = curPath + [node]
+    
+    # Combine paths from start to target and target to end
+    final_path = target_path + end_path[1:]
+
+    # Postconditions
+    assert final_path[-1] == endNodeIndex, "The path does not end at the end node."
+    assert targetNodeIndex in final_path, "The path does not hit the target node."
+
+    return final_path
+    #return [1,2]
+

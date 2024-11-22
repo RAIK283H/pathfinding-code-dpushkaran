@@ -139,7 +139,7 @@ class Scoreboard:
                 winner = player.player_config_data[0]
 
             self.winner_label.text = f"Winner: {winner} with {int(shortestDist)} steps"
-
+        
     def update_scoreboard(self):
         self.update_elements_locations()
         self.update_paths()
