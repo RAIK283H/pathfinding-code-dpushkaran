@@ -52,7 +52,7 @@ def reconstruct_path(parent, start, end):
 
     return path
 
-def run_floyd_warshall_and_print_paths(graph_data):
+def run_and_print_FW(graph_data):
     for graph_index, graph in enumerate(graph_data):
 
         true_index = (graph_index +1)
@@ -70,4 +70,4 @@ def run_floyd_warshall_and_print_paths(graph_data):
 
         print("--------------------------------------------------------------")
 
-run_floyd_warshall_and_print_paths(graph_data)
+run_and_print_FW(graph_data)
